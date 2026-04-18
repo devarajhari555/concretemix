@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHP BUILDERS CONCRETE MIX</title>
+    <meta name="description" content="MHP BUILDERS CONCRETE MIX — Professional IS 10262 compliant mix design calculator. Calculate cement, water, and aggregates instantly.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     PRINT REPORT  (hidden on screen, shown on print)
+══════════════════════════════════════════════════ -->
+<div id="print-report">
+
+    <div class="report-border">
+
+        <!-- Header -->
+        <header class="report-header">
+            <img src="logo.jpg" alt="MHP Builders" class="report-logo">
+            <div class="report-title">
+                <div class="report-brand">MHP BUILDERS</div>
+                <h1>CONCRETE MIX REPORT</h1>
+                <p id="report-date"></p>
+            </div>
+        </header>
+
+        <!-- Company strip -->
+        <div class="report-company-strip">
+            <span>MHP BUILDERS — STRUCTURAL ENGINEERING DIVISION</span>
+            <span>IS 10262 COMPLIANT MIX DESIGN</span>
+        </div>
+
+        <div class="report-body">
+
+            <!-- Summary Table -->
+            <div class="report-full-width">
+                <h3>Mix Design Summary</h3>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th style="width:40%">Parameter</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Mix Grade</td>            <td id="rep-mix"></td></tr>
+                        <tr><td>Concrete Volume</td>      <td><span id="rep-vol"></span> m³</td></tr>
+                        <tr><td>W/C Ratio</td>            <td id="rep-wc"></td></tr>
+                        <tr><td>Super Plasticizer</td>    <td id="rep-sp-used"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Material Quantities Table -->
+            <div class="report-full-width" style="margin-top:0.8rem">
+                <h3>Material Quantities</h3>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th style="width:25%">Material</th>
+                            <th>Qty (KG/L)</th>
+                            <th>CUM</th>
+                            <th>CFT</th>
+                            <th>UNIT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="rep-highlight-row">
+                            <td>Cement</td>
+                            <td id="rep-cement"></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Water</td>
+                            <td id="rep-water"></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Fine Aggregate</td>
+                            <td id="rep-fa-kg"></td>
+                            <td id="rep-fa-cum"></td>
+                            <td id="rep-fa-cft"></td>
+                            <td id="rep-fa-unit"></td>
+                        </tr>
+                        <tr>
+                            <td>Coarse Aggregate</td>
+                            <td id="rep-ca-kg"></td>
+                            <td id="rep-ca-cum"></td>
+                            <td id="rep-ca-cft"></td>
+                            <td id="rep-ca-unit"></td>
+                        </tr>
+                        <tr id="rep-sp-row">
+                            <td>Super Plasticizer (SP)</td>
+                            <td id="rep-sp"></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Final Ratio -->
+            <div class="report-full-width" style="margin-top:0.8rem">
+                <h3>Final Mix Proportions — Cement : FA : CA</h3>
+                <div class="proportion-box"><span id="rep-final-ratio"></span></div>
+            </div>
+
+            <!-- Internal stubs for SP SG (if still needed by JS) -->
+            <span id="rep-sg-sp" style="display:none"></span>
+            <span id="rep-sp-sg-row" style="display:none"></span>
+
+        </div><!-- /report-body -->
+
+        <footer class="report-footer">
+            <span>Concrete Mix Design Summary — Page 1</span>
+        </footer>
+
+    </div><!-- /report-border -->
+
+</div><!-- /print-report -->
+
+
+<!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+<div id="login-screen" class="login-container">
+    <div class="login-box">
+
+        <!-- Logo -->
+        <div class="login-logo-wrap">
+            <img src="logo.jpg" alt="MHP Builders" class="login-logo-img">
+        </div>
+
+        <!-- Heading -->
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Sign in to access your calculations</p>
+
+        <!-- Form -->
+        <form id="login-form" class="login-form">
+
+            <!-- Email -->
+            <div class="lf-group">
+                <label class="lf-label" for="login-email">EMAIL</label>
+                <div class="lf-input-wrap">
+                    <svg class="lf-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <input type="email" id="login-email" class="lf-input" placeholder="you@company.com" required autocomplete="email">
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="lf-group">
+                <label class="lf-label" for="login-password">PASSWORD</label>
+                <div class="lf-input-wrap">
+                    <svg class="lf-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="password" id="login-password" class="lf-input" placeholder="•••••••••" required autocomplete="current-password">
+                    <button type="button" id="toggle-password" class="lf-eye" title="Show/Hide">
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error -->
+            <div id="login-error" class="lf-error hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Invalid email or password. Please try again.
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="lf-btn" id="login-btn">
+                <span class="lf-btn-text">Sign In</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+
+        </form>
+
+        <!-- Sub-link -->
+        <p class="login-signup-hint">Don't have an account? <strong>Sign Up</strong></p>
+
+        <!-- Footer -->
+        <p class="login-foot">MHP BUILDERS &bull; CONCRETE CALCULATOR</p>
+
+    </div>
+</div>
+
+
+
+<!-- ══════════════════════════════════════
+     LIVE SITE INTERFACE
+══════════════════════════════════════ -->
+<div class="app-wrapper hidden">
+
+    <!-- ── TOP NAV ── -->
+    <nav class="topbar">
+        <div class="topbar-brand">
+            <img src="logo.jpg" alt="MHP Builders" class="topbar-logo">
+            <div class="topbar-divider"></div>
+            <div class="topbar-app-name">
+                <strong>MHP BUILDERS</strong>
+                CONCRETE MIX
+            </div>
+        </div>
+        <div class="topbar-actions">
+            <span class="topbar-badge">IS 10262</span>
+            <button id="logout-btn" class="btn-logout" title="Logout session">
+                <span class="logout-icon">🚪</span>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- ── PAGE CONTENT ── -->
+    <main class="page-content">
+
+        <!-- Hero -->
+        <section class="page-hero">
+            <h1>MHP BUILDERS <span>CONCRETE MIX</span></h1>
+            <p>IS 10262 compliant mix proportioning · Instant, accurate, site-ready results</p>
+            <div class="hero-tags">
+                <span class="tag">M10 – M60</span>
+                <span class="tag">IS 10262</span>
+                <span class="tag">CUM / CFT / KG</span>
+                <span class="tag">Super Plasticizer</span>
+                <span class="tag">Printable Report</span>
+            </div>
+        </section>
+
+        <!-- Grid -->
+        <div class="main-grid">
+
+            <!-- ─── INPUT PANEL ─── -->
+            <aside>
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-header-icon">⚙️</div>
+                        <div>
+                            <div class="panel-title">Design Parameters</div>
+                            <div class="panel-subtitle">Configure mix design inputs</div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="section-label">Mix Specification</div>
+
+                        <div class="form-group">
+                            <label for="mix-grade">Concrete Mix Grade</label>
+                            <select id="mix-grade">
+                                <option value="M10">M10</option>
+                                <option value="M15">M15</option>
+                                <option value="M20">M20</option>
+                                <option value="M25" selected>M25</option>
+                                <option value="M30">M30</option>
+                                <option value="M35">M35</option>
+                                <option value="M40">M40</option>
+                                <option value="M45">M45</option>
+                                <option value="M50">M50</option>
+                                <option value="M55">M55</option>
+                                <option value="M60">M60</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="wc-ratio">W/C Ratio</label>
+                                <input type="number" id="wc-ratio" step="0.01" value="0.45" placeholder="0.45">
+                            </div>
+                            <div class="form-group">
+                                <label for="concrete-vol">Volume (m³)</label>
+                                <input type="number" id="concrete-vol" step="0.1" value="1.0" placeholder="1.0">
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+                        <div class="section-label">Chemical Admixture</div>
+
+                        <div class="toggle-group" id="sp-toggle-row" onclick="document.getElementById('sp-used').click()">
+                            <div>
+                                <div class="toggle-label">🧪 Super Plasticizer (SP)</div>
+                                <span class="toggle-desc">Reduces water demand by ~20%</span>
+                            </div>
+                            <label class="switch" onclick="event.stopPropagation()">
+                                <input type="checkbox" id="sp-used" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div id="sp-params">
+                            <div class="form-group">
+                                <label for="sp-dosage">SP Dosage (% of cement content)</label>
+                                <input type="number" id="sp-dosage" step="0.05" min="0.35" max="1.50" value="0.8">
+                                <small style="font-size:0.68rem;color:var(--text-2);display:block;margin-top:4px;">Recommended: 0.35% – 1.50%</small>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+                        <div class="section-label">Aggregate Split</div>
+
+                        <div class="form-group">
+                            <label for="agg-ratio">CA : FA Proportion</label>
+                            <select id="agg-ratio">
+                                <option value="60-40">60 : 40</option>
+                                <option value="62-38">62 : 38</option>
+                                <option value="64-36">64 : 36</option>
+                            </select>
+                        </div>
+
+                        <div class="divider"></div>
+                        <div class="section-label">Specific Gravities</div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="sg-cement">Cement SG</label>
+                                <input type="number" id="sg-cement" step="0.01" value="3.15">
+                            </div>
+                            <div class="form-group">
+                                <label for="sg-fa">Fine Agg. SG</label>
+                                <input type="number" id="sg-fa" step="0.01" value="2.65">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="sg-ca">Coarse Agg. SG</label>
+                                <input type="number" id="sg-ca" step="0.01" value="2.74">
+                            </div>
+                            <div class="form-group" id="sp-sg-group">
+                                <label for="sg-sp">SP SG</label>
+                                <input type="number" id="sg-sp" step="0.01" value="1.20">
+                            </div>
+                        </div>
+
+                        <button class="btn-calculate" id="calculate-btn">
+                            <span class="btn-calculate-icon">⚡</span>
+                            Calculate Mix Design
+                        </button>
+
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ─── RESULTS PANEL ─── -->
+            <section>
+                <div class="panel" id="results-panel">
+                    <div class="panel-header">
+                        <div class="panel-header-icon">📊</div>
+                        <div>
+                            <div class="panel-title">Mix Design Summary</div>
+                            <div class="panel-subtitle">Proportions &amp; material quantities</div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+
+                        <!-- Placeholder -->
+                        <div id="results-placeholder" class="results-placeholder">
+                            <div class="placeholder-icon">📐</div>
+                            <h3>Ready for Calculation</h3>
+                            <p>Set your parameters on the left and click <strong style="color:var(--orange)">Calculate Mix Design</strong> to generate the full report.</p>
+                        </div>
+
+                        <!-- Results -->
+                        <div id="results-content" class="hidden">
+
+                            <!-- Ratio Banner -->
+                            <div class="ratio-banner">
+                                <div>
+                                    <div class="ratio-label">Final Ratio — Cement : FA : CA</div>
+                                    <div class="ratio-value" id="res-final-ratio">1 : — : —</div>
+                                    <div class="ratio-wc"   id="res-wc-display">W/C Ratio: —</div>
+                                </div>
+                                <div class="ratio-grade-badge" id="res-grade-badge">M25</div>
+                            </div>
+
+                            <!-- Mix Visualizer -->
+                            <div class="viz-container">
+                                <div class="viz-title">Proportional Mix Visualizer (by mass)</div>
+                                <div class="mix-bar">
+                                    <div class="bar-segment cement" id="viz-cement" style="width:15%"><span>C</span></div>
+                                    <div class="bar-segment fa"     id="viz-fa"     style="width:28%"><span>FA</span></div>
+                                    <div class="bar-segment ca"     id="viz-ca"     style="width:57%"><span>CA</span></div>
+                                </div>
+                                <div class="bar-legend">
+                                    <div class="legend-item"><div class="legend-dot cement"></div>Cement</div>
+                                    <div class="legend-item"><div class="legend-dot fa"></div>Fine Aggregate</div>
+                                    <div class="legend-item"><div class="legend-dot ca"></div>Coarse Aggregate</div>
+                                </div>
+                            </div>
+
+                            <!-- Stat Cards -->
+                            <div class="section-label">
+                                Material Quantities for
+                                <span id="res-vol-title" style="color:var(--orange)">1</span> m³
+                            </div>
+
+                            <div class="stat-grid">
+                                <div class="stat-card highlight">
+                                    <div class="stat-label">Cement</div>
+                                    <div class="stat-value" id="res-cement-kg">—</div>
+                                    <div class="stat-unit">KG</div>
+                                    <div class="stat-sub"  id="res-cement-bags">— Bags</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Water</div>
+                                    <div class="stat-value" id="res-water-l">—</div>
+                                    <div class="stat-unit">Liters</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Fine Aggregate</div>
+                                    <div class="stat-value" id="res-fa-kg">—</div>
+                                    <div class="stat-unit">KG</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Coarse Aggregate</div>
+                                    <div class="stat-value" id="res-ca-kg">—</div>
+                                    <div class="stat-unit">KG</div>
+                                </div>
+                                <div class="stat-card hidden" id="res-sp-card">
+                                    <div class="stat-label">Chem. Admix (SP)</div>
+                                    <div class="stat-value" id="res-sp-kg">—</div>
+                                    <div class="stat-unit">KG / Liters</div>
+                                </div>
+                            </div>
+
+                            <!-- Aggregate Table -->
+                            <div class="table-wrap">
+                                <div class="table-heading">Aggregate Breakdown — CUM · CFT · Units</div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Material</th>
+                                            <th>Qty (CUM)</th>
+                                            <th>Qty (CFT)</th>
+                                            <th>Unit (100 CFT)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Fine Aggregate</td>
+                                            <td id="res-fa-cum">—</td>
+                                            <td id="res-fa-cft">—</td>
+                                            <td id="res-fa-unit">—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Coarse Aggregate</td>
+                                            <td id="res-ca-cum">—</td>
+                                            <td id="res-ca-cft">—</td>
+                                            <td id="res-ca-unit">—</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Print -->
+                            <button class="btn-print" id="print-btn">
+                                🖨️ &nbsp; Export / Print Report
+                            </button>
+
+                        </div><!-- /results-content -->
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /main-grid -->
+    </main>
+
+    <footer class="main-footer">
+        <img src="logo.jpg" alt="MHP Builders" style="height:24px;mix-blend-mode:lighten;opacity:0.6;">
+        <span class="dot">·</span>
+        <span>Precision Engineering</span>
+        <span class="dot">·</span>
+        <span>IS 10262 Compliant</span>
+        <span class="dot">·</span>
+        <span>© 2024 MHP BUILDERS CONCRETE MIX</span>
+    </footer>
+
+</div><!-- /app-wrapper -->
+
+<script src="app.js"></script>
+</body>
+</html>
